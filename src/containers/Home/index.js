@@ -8,6 +8,7 @@ import {
   FlatList,
   Image,
   Text,
+  ActivityIndicator,
 } from 'react-native';
 
 import {SliderBox} from 'react-native-image-slider-box';
@@ -20,11 +21,13 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+// import Pdf from 'react-native-pdf';
 
 import {Colors} from '../../constant/Style';
 import {Components} from '../../components';
 import Tabs from '../../navigations/tabs';
 import {LexendDeca} from '../../constant/Style/fonts';
+import PDFView from 'react-native-view-pdf';
 
 const {width} = Dimensions.get('screen');
 const {BLACK, WHITECOLOR} = Colors;
@@ -43,20 +46,11 @@ const leftIcon = props => {
   );
 };
 
-const rightIcon = props => {
-  return (
-    <TouchableOpacity
-      style={{
-        width: 45,
-        height: 45,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      // onPress={() => props.navigation.goBack()}
-    >
-      <BagIcon name="shopping-bag" size={30} color={BLACK} />
-    </TouchableOpacity>
-  );
+const resources = {
+  // file: Platform.OS === 'ios' ? 'downloadedDocument.pdf' : '/sdcard/Download/downloadedDocument.pdf',
+  url:
+    'https://hellomoto123.herokuapp.com/uploads/1579857052644html_tutorial.pdf',
+  // base64: 'JVBERi0xLjMKJcfs...',
 };
 
 export default class Home extends React.Component {
@@ -68,7 +62,8 @@ export default class Home extends React.Component {
       'https://images.pexels.com/photos/267582/pexels-photo-267582.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', // Network image
       'https://images.pexels.com/photos/1029808/pexels-photo-1029808.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
     ],
-    data: null,
+    data: [],
+    isLoader: true,
   };
 
   componentDidMount() {
@@ -80,32 +75,37 @@ export default class Home extends React.Component {
       .catch(e => console.log(e, 'errror'));
   }
 
+  reloadPDF = e => {
+    this.setState({isLoader: e});
+  };
+
   render() {
-    const {data} = this.state;
+    const {data, isLoader} = this.state;
+    const resourceType = 'url';
 
     return (
       <View style={{flex: 1}}>
-        <Components.Header leftIcon={leftIcon()} rightIcon={rightIcon()} />
+        <Components.Header leftIcon={leftIcon()} />
         {/* <View
+          style={{
+            height: hp('13%'),
+            justifyContent: 'center',
+            backgroundColor: '#FAFAFC',
+          }}>
+          <Item
+            regular
             style={{
-              height: hp('13%'),
-              justifyContent: 'center',
-              backgroundColor: '#FAFAFC',
+              width: wp('85%'),
+              alignSelf: 'center',
+              alignItems: 'center',
+              backgroundColor: WHITECOLOR,
+              height: hp('6%'),
             }}>
-            <Item
-              regular
-              style={{
-                width: wp('85%'),
-                alignSelf: 'center',
-                alignItems: 'center',
-                backgroundColor: WHITECOLOR,
-                height: hp('6%'),
-              }}>
-              <SearchIcon name="search" size={30} color={BLACK} />
-              <Input placeholder="Underline Textbox" />
-              <FilterIcon name="filter" size={30} color={BLACK} />
-            </Item>
-          </View> */}
+            <SearchIcon name="search" size={30} color={BLACK} />
+            <Input placeholder="Underline Textbox" />
+            <FilterIcon name="filter" size={30} color={BLACK} />
+          </Item>
+        </View> */}
         <ScrollView>
           <View
             style={{
@@ -125,13 +125,13 @@ export default class Home extends React.Component {
             </View>
           </View>
           {/* <View style={{height: 100}} />
-              <View style={{height: 100}} />
-              <View style={{height: 100}} />
-              <View style={{height: 100}} />
-              <View style={{height: 100}} />
-              <View style={{height: 100}} />
-              <View style={{height: 100}} />
-            */}
+            <View style={{height: 100}} />
+            <View style={{height: 100}} />
+            <View style={{height: 100}} />
+            <View style={{height: 100}} />
+            <View style={{height: 100}} />
+            <View style={{height: 100}} />
+          */}
 
           <FlatList
             style={styles.list}
@@ -143,8 +143,13 @@ export default class Home extends React.Component {
               return item.id;
             }}
             renderItem={({item}) => {
+              console.log(item.bookImage, 'd');
               return (
-                <TouchableOpacity style={styles.card}>
+                <TouchableOpacity
+                  style={styles.card}
+                  onPress={() =>
+                    this.props.navigation.navigate('BookDescription')
+                  }>
                   <Image
                     style={styles.cardImage}
                     source={{

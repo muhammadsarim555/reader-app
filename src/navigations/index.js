@@ -12,6 +12,7 @@ const AppNavigator = createStackNavigator(
     // Login: Screens.Login,
     // Register: Screens.Register,
     Home: Screens.Home,
+    BookDescription: Screens.BookDescription,
   },
   {
     headerMode: 'none',
