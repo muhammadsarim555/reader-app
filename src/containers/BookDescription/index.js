@@ -11,13 +11,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import {SliderBox} from 'react-native-image-slider-box';
-import {Item, Input} from 'native-base';
 import BackIcon from 'react-native-vector-icons/MaterialIcons';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {Colors} from '../../constant/Style';
 import {Components} from '../../components';
@@ -50,21 +49,30 @@ const resources = {
 
 class BookDescription extends React.Component {
   state = {
-    data: [],
+    bookInfo: {},
     isLoader: true,
   };
+
+  componentDidMount() {
+    this.setState({bookInfo: this.props.navigation.state.params});
+  }
 
   reloadPDF = e => {
     this.setState({isLoader: e});
   };
 
   render() {
-    const {isLoader} = this.state;
+    const {isLoader, bookInfo} = this.state;
     const resourceType = 'url';
 
     return (
       <View style={{flex: 1}}>
         <Components.Header leftIcon={leftIcon(this.props)} />
+
+        <View style={{height: hp('10%'), margin: 20}}>
+          <Text style={styles.title}>{bookInfo.bookDescription}</Text>
+        </View>
+
         {isLoader && (
           <ActivityIndicator
             size="large"
@@ -129,11 +137,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   title: {
-    fontSize: hp('2.5%'),
+    fontSize: hp('2%'),
     flex: 1,
     borderRadius: 20,
     fontFamily: LexendDeca,
-    color: 'white',
+    color: BLACK,
     marginLeft: wp('3%'),
   },
 });

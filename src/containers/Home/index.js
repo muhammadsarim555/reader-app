@@ -7,27 +7,21 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  Text,
   ActivityIndicator,
+  Text,
 } from 'react-native';
 
 import {SliderBox} from 'react-native-image-slider-box';
-import {Item, Input} from 'native-base';
 import MenuIcon from 'react-native-vector-icons/Feather';
-import SearchIcon from 'react-native-vector-icons/EvilIcons';
-import FilterIcon from 'react-native-vector-icons/AntDesign';
-import BagIcon from 'react-native-vector-icons/Fontisto';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-// import Pdf from 'react-native-pdf';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {Colors} from '../../constant/Style';
 import {Components} from '../../components';
-import Tabs from '../../navigations/tabs';
 import {LexendDeca} from '../../constant/Style/fonts';
-import PDFView from 'react-native-view-pdf';
 
 const {width} = Dimensions.get('screen');
 const {BLACK, WHITECOLOR} = Colors;
@@ -44,13 +38,6 @@ const leftIcon = props => {
       <MenuIcon name="align-left" size={30} color={BLACK} />
     </TouchableOpacity>
   );
-};
-
-const resources = {
-  // file: Platform.OS === 'ios' ? 'downloadedDocument.pdf' : '/sdcard/Download/downloadedDocument.pdf',
-  url:
-    'https://hellomoto123.herokuapp.com/uploads/1579857052644html_tutorial.pdf',
-  // base64: 'JVBERi0xLjMKJcfs...',
 };
 
 export default class Home extends React.Component {
@@ -70,48 +57,22 @@ export default class Home extends React.Component {
     fetch(`https://hellomoto123.herokuapp.com/addBooks/photos`)
       .then(json => json.json())
       .then(s => {
-        this.setState({data: s});
+        this.setState({data: s, isLoader: false});
       })
       .catch(e => console.log(e, 'errror'));
   }
 
-  reloadPDF = e => {
-    this.setState({isLoader: e});
-  };
-
   render() {
     const {data, isLoader} = this.state;
-    const resourceType = 'url';
 
     return (
       <View style={{flex: 1}}>
         <Components.Header leftIcon={leftIcon()} />
-        {/* <View
-          style={{
-            height: hp('13%'),
-            justifyContent: 'center',
-            backgroundColor: '#FAFAFC',
-          }}>
-          <Item
-            regular
-            style={{
-              width: wp('85%'),
-              alignSelf: 'center',
-              alignItems: 'center',
-              backgroundColor: WHITECOLOR,
-              height: hp('6%'),
-            }}>
-            <SearchIcon name="search" size={30} color={BLACK} />
-            <Input placeholder="Underline Textbox" />
-            <FilterIcon name="filter" size={30} color={BLACK} />
-          </Item>
-        </View> */}
+
         <ScrollView>
           <View
             style={{
-              // backgroundColor: 'red',
               height: hp('30%'),
-              // justifyContent: 'center',
             }}>
             <View>
               <SliderBox
@@ -124,61 +85,68 @@ export default class Home extends React.Component {
               />
             </View>
           </View>
-          {/* <View style={{height: 100}} />
-            <View style={{height: 100}} />
-            <View style={{height: 100}} />
-            <View style={{height: 100}} />
-            <View style={{height: 100}} />
-            <View style={{height: 100}} />
-            <View style={{height: 100}} />
-          */}
 
-          <FlatList
-            style={styles.list}
-            contentContainerStyle={styles.listContainer}
-            data={data}
-            horizontal={false}
-            numColumns={2}
-            keyExtractor={item => {
-              return item.id;
-            }}
-            renderItem={({item}) => {
-              console.log(item.bookImage, 'd');
-              return (
-                <TouchableOpacity
-                  style={styles.card}
-                  onPress={() =>
-                    this.props.navigation.navigate('BookDescription')
-                  }>
-                  <Image
-                    style={styles.cardImage}
-                    source={{
-                      uri: `https://hellomoto123.herokuapp.com/${item.bookImage}`,
-                    }}
-                  />
+          {isLoader ? (
+            <ActivityIndicator
+              size="large"
+              color="black"
+              style={{justifyContent: 'center', alignItems: 'center'}}
+            />
+          ) : (
+            <FlatList
+              style={styles.list}
+              contentContainerStyle={styles.listContainer}
+              data={data}
+              horizontal={false}
+              numColumns={2}
+              keyExtractor={item => {
+                return item.id;
+              }}
+              renderItem={({item}) => {
+                return (
+                  <TouchableOpacity
+                    style={styles.card}
+                    onPress={() =>
+                      this.props.navigation.navigate('BookDescription', item)
+                    }>
+                    <Image
+                      style={styles.cardImage}
+                      source={{
+                        uri: `https://hellomoto123.herokuapp.com/${item.bookImage}`,
+                      }}
+                      resizeMode={'cover'}
+                    />
 
-                  <View
-                    style={{
-                      position: 'absolute',
-                      justifyContent: 'space-between',
-                      top: 6,
-                      flexDirection: 'row',
-                    }}>
-                    <Text style={styles.title}>{item.bookName}</Text>
-                  </View>
+                    <LinearGradient
+                      colors={['transparent', 'red']}
+                      start={{x: 0.2, y: 0.3}}
+                      end={{x: 0.5, y: 1}}
+                      locations={[0.0, 0.35, 0.99]}
+                      style={{
+                        position: 'absolute',
+                        top: 2,
+                        bottom: 10,
+                        width: '100%',
+                        height: '100%',
+                        alignSelf: 'center',
+                        opacity: 0.4,
+                        borderRadius: 20,
+                      }}
+                    />
 
-                  <View
-                    style={{
-                      position: 'absolute',
-                      justifyContent: 'space-between',
-                      bottom: 15,
-                    }}>
-                    <Text style={styles.title}>{item.bookDescription}</Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
+                    <View
+                      style={{
+                        position: 'absolute',
+                        justifyContent: 'space-between',
+                        bottom: 15,
+                      }}>
+                      <Text style={styles.title}>{item.bookName}</Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          )}
         </ScrollView>
       </View>
     );
