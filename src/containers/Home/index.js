@@ -118,9 +118,9 @@ export default class Home extends React.Component {
                     />
 
                     <LinearGradient
-                      colors={['transparent', 'red']}
-                      start={{x: 0.2, y: 0.3}}
-                      end={{x: 0.5, y: 1}}
+                      colors={['transparent', 'black']}
+                      start={{x: 0.1, y: 0.4}}
+                      end={{x: 0.4, y: 2}}
                       locations={[0.0, 0.35, 0.99]}
                       style={{
                         position: 'absolute',
