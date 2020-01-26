@@ -1,28 +1,25 @@
-import { ONGOOGLESUCCESS, OTPCODE,LOGOUT } from "../Actions/actionTypes";
+import {BOOKSINFO} from '../Actions/actionTypes';
 
 const INITIAL_STATE = {
-  user: null,
-  otpcode: ""
+  bookData: [],
+  fetchLoading: true,
 };
 
 const AuthReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case ONGOOGLESUCCESS:
+    case BOOKSINFO:
       return {
         ...INITIAL_STATE,
-        user: action.payload
+        bookData: action.payload,
       };
-    case OTPCODE:
-      return {
-        ...INITIAL_STATE,
-        otpcode: action.payload
-      };
-      case LOGOUT:
-        return {
-          ...state,
-          user: null,
-          
-        };
+
+      // case "FETCH_PRODUCTS_SUCCESS":
+      //   return {
+      //       ...state,
+      //       fetchLoading: false,
+      //       fetchLoading: action.
+      //   }
+
     default:
       return state;
   }

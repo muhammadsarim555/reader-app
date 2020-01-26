@@ -1,13 +1,14 @@
-import ReduxThunk from "redux-thunk";
-import { createStore, applyMiddleware, compose } from "redux";
-import reducer from "./Reducers";
+import ReduxThunk from 'redux-thunk';
+import {createStore, applyMiddleware, compose} from 'redux';
+import reducer from './Reducers';
 
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for we
+import {persistStore, persistReducer} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const persistConfig = {
-  key: "root",
-  storage
+  key: 'root',
+  storage,
 };
 
 let composeEnhancers = compose;
@@ -21,9 +22,9 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 const store = createStore(
   persistedReducer,
   {},
-  composeEnhancers(applyMiddleware(ReduxThunk))
+  composeEnhancers(applyMiddleware(ReduxThunk)),
 );
 // const store = createStore(persistedReducer, applyMiddleware(thunk))
 const persistor = persistStore(store);
 
-export { store, persistor };
+export {store, persistor};

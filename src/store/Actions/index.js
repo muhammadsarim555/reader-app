@@ -1,28 +1,38 @@
-import firebase from "react-native-firebase";
-import * as actionTypes from "./actionTypes";
+import * as actionTypes from './actionTypes';
 
-const getOtpCode = code => {
+import {store} from '../index';
+
+const onGetInfo = info => {
+  console.log(info, 'info');
   return dispatch => {
-    dispatch({
-      type: actionTypes.OTPCODE,
-      payload: code
-    });
+    fetch('https://hellomoto123.herokuapp.com/addBooks/photos')
+      .then(response => response.json())
+      .then(json => {
+        console.log(json, 'data is here');
+
+        dispatch({
+          type: actionTypes.BOOKSINFO,
+          payload: info,
+          type: 'FETCH_PRODUCTS_SUCCESS',
+          boolean: false,
+        });
+      });
   };
 };
 
-const onGoogleLoginSuccess = user => {
-  return dispatch => {
-    dispatch({
-      type: actionTypes.ONGOOGLESUCCESS,
-      payload: user
-    });
-  };
-};
+store.dispatch(onGetInfo());
 
-const onLogOut = () => {
+// const fetchProductsPending = () {
+//   return {
+//       type: FETCH_PRODUCTS_PENDING
+//   }
+// }
+
+const fetchProductsSuccess = products => {
   return {
-    type: actionTypes.LOGOUT,
+    type: 'FETCH_PRODUCTS_SUCCESS',
+    products: products,
   };
 };
 
-export { onGoogleLoginSuccess, getOtpCode,onLogOut };
+export {onGetInfo, fetchProductsSuccess};
