@@ -11,14 +11,8 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
         bookData: action.payload,
+        fetchLoading: action.fetchLoading,
       };
-
-      // case "FETCH_PRODUCTS_SUCCESS":
-      //   return {
-      //       ...state,
-      //       fetchLoading: false,
-      //       fetchLoading: action.
-      //   }
 
     default:
       return state;

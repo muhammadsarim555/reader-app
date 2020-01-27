@@ -42,19 +42,18 @@ const leftIcon = props => {
   );
 };
 
-const resources = {
-  url:
-    'https://hellomoto123.herokuapp.com/uploads/1579857052644html_tutorial.pdf',
-};
-
 class BookDescription extends React.Component {
   state = {
     bookInfo: {},
     isLoader: true,
+    resources: {url: ''},
   };
 
   componentDidMount() {
-    this.setState({bookInfo: this.props.navigation.state.params});
+    let resources = Object.assign({}, this.state.resources);
+    resources.url = `https://hellomoto123.herokuapp.com/${this.props.navigation.state.params.bookFile}`;
+
+    this.setState({bookInfo: this.props.navigation.state.params, resources});
   }
 
   reloadPDF = e => {
@@ -62,7 +61,8 @@ class BookDescription extends React.Component {
   };
 
   render() {
-    const {isLoader, bookInfo} = this.state;
+    const {isLoader, bookInfo, resources} = this.state;
+    console.log(resources, 'resources');
     const resourceType = 'url';
 
     return (
@@ -87,7 +87,9 @@ class BookDescription extends React.Component {
           resource={resources[resourceType]}
           resourceType={resourceType}
           onLoad={() => this.reloadPDF(false)}
-          onError={() => console.log('Cannot render PDF', error)}
+          onError={() =>
+            console.log('Cannot render PDF', 'something went wrong')
+          }
         />
       </View>
     );
